@@ -8,7 +8,7 @@ import matplotlib as mpl
 
 def CustomColorMap1():
     # Generate custom cmap
-    boundaries = np.arange(0, 1600, 100)  # adjust max value as needed
+    boundaries = np.arange(0, 220, 20)  # adjust max value as needed
     cmap_custom = mpl.colormaps.get_cmap("jet").resampled(len(boundaries))
     colors = list(cmap_custom(np.arange(len(boundaries))))
     cmap1 = mpl.colors.ListedColormap(colors, "k")
@@ -28,9 +28,9 @@ def CustomColorMap2():
 version = '004'
 
 # Load the file
-ds = xr.open_dataset(f"/home/waynedj/Projects/seaiceretention/trajectories/distances/distance_data_Parcel_OSISAF_62500m_06hr_v{version}.nc")
+ds = xr.open_dataset(f"/home/waynedj/Projects/seaice_retention/trajectories/distances/distance_data_Parcel_OSISAF_62500m_06hr_v{version}.nc")
 
-for t in range(0,90,5):
+for t in range(10, 11, 5):
 # data variables at time t
 
     cum_distances          = ds["cum_distance"].isel(time=t).values/1000
@@ -53,7 +53,7 @@ for t in range(0,90,5):
 
     # Map settings shared
     extent     = [-4000000, 4000000, -4000000, 4000000]  # adjust region
-    vmin, vmax = 0, 1600  # km
+    vmin, vmax = 0, 220  # km
     fonts      = {'textbox': 12, 'colorbar': 14, 'colorbar_ticks': 10}  # Add font sizes
     projection = ccrs.Stereographic(central_latitude=-90,true_scale_latitude=-71,central_longitude=0)
     for ax in axes:
@@ -75,12 +75,12 @@ for t in range(0,90,5):
     cbar2.ax.tick_params(labelsize=fonts['colorbar_ticks'])
 
     # --- Panel 3: Meandering coefficient ---
-    pcm3 = axes[2].pcolormesh(lon_2D, lat_2D, meandering_coefficient.reshape(lon_2D.shape),transform=projection, cmap=CustomColorMap2(), vmin=1, vmax=8)
+    pcm3 = axes[2].pcolormesh(lon_2D, lat_2D, meandering_coefficient.reshape(lon_2D.shape),transform=projection, cmap=CustomColorMap2(), vmin=1, vmax=5)
     cbar3 = fig.colorbar(pcm3, ax=axes[2], orientation="horizontal", pad=0.03, shrink=0.7)
     cbar3.set_label(f"Meandering Coefficient (distance/displacement)", fontsize=fonts['colorbar'])
     cbar3.ax.tick_params(labelsize=fonts['colorbar_ticks'])
 
-    plt.savefig(f"/home/waynedj/Projects/seaiceretention/trajectories/distances/distance_data_Parcel_OSISAF_62500m_06hr_v{version}/fig_{version}_t{t+1:03d}days.png", dpi=500, bbox_inches='tight')
-    plt.close()
+    #plt.savefig(f"/home/waynedj/Projects/seaice_retention/trajectories/distances/distance_data_Parcel_OSISAF_62500m_06hr_v{version}/fig_{version}_t{t+1:03d}days_test.png", dpi=500, bbox_inches='tight')
+    #plt.close()
 
     # %%

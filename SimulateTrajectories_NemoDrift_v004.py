@@ -5,10 +5,9 @@ import numpy as np
 from parcels import Field, FieldSet, ParticleSet, Variable, JITParticle, AdvectionRK4
 from parcels.tools.statuscodes import StatusCode
 from datetime import timedelta
-import matplotlib.pyplot as plt
-import cartopy.crs as ccrs
 
-version = '004'
+
+version = '003'
 
 def make_curvilinear_periodic(longitude, latitude, u, v):
     """
@@ -98,9 +97,9 @@ start_time_index   = 604
 start_time_seconds = time_seconds[start_time_index]
 
 # define drop locations
-drop_lon                 = np.arange(0, 360, 0.5)
+drop_lon                 = np.arange(0, 360, 6)
 drop_lon                 = drop_lon % 360
-drop_lat                 = np.arange(-78, -58, 0.5)
+drop_lat                 = np.arange(-78, -58, 2)
 drop_lon_2D, drop_lat_2D = np.meshgrid(drop_lon, drop_lat)
 drop_lon_1D              = drop_lon_2D.ravel()
 drop_lat_1D              = drop_lat_2D.ravel()
@@ -119,7 +118,7 @@ pset = ParticleSet.from_list(fieldset=fieldset,
 
 pset.populate_indices()
 
-output_file = pset.ParticleFile(name=f"/home/waynedj/Projects/seaiceretention/trajectories/Parcel_NEMO_2deg_06hr_v{version}.zarr", outputdt=timedelta(days=1))
+output_file = pset.ParticleFile(name=f"/home/waynedj/Projects/seaice_retention/trajectories/Parcel_NEMO_2deg_06hr_v{version}.zarr", outputdt=timedelta(days=1))
 
 pset.execute([AdvectionRK4, KillIfOutOfBounds],
              runtime=timedelta(days=90),
@@ -128,19 +127,24 @@ pset.execute([AdvectionRK4, KillIfOutOfBounds],
 
 
 # %%
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import xarray as xr
 
 projection = ccrs.Stereographic(central_latitude=-90,true_scale_latitude=-71,central_longitude=0)
 
+version = '003'
+
 # Set up figure and axes
-fig = plt.figure(figsize=(20, 20))
+fig = plt.figure(figsize=(18, 18))
 ax = plt.axes(projection=projection)
-extent = [-3500000, 3500000, -3500000, 3500000]
-#extent = [2000000, 4000000, 0, 2000000]
-#ax.set_extent(extent, crs=projection)
+#extent = [-3500000, 3500000, -3500000, 3500000]
+extent  = [-3200000,  500000,   500000, 4000000]
+ax.set_extent(extent, crs=projection)
 ax.coastlines()
 ax.gridlines(draw_labels=True)
 
-ds = xr.open_zarr(f"/home/waynedj/Projects/seaiceretention/trajectories/Parcel_NEMO_2deg_06hr_v{version}.zarr", decode_timedelta=True)
+ds = xr.open_zarr(f"/home/waynedj/Projects/seaice_retention/trajectories/Parcel_NEMO_2deg_06hr_v{version}.zarr", decode_timedelta=True)
 
 # Plot the NEMO grid boundaries for reference
 #ax.plot([longitude[0,0], longitude[0,0]], [latitude[0,0], latitude[-1,0]], color='m', transform=ccrs.PlateCarree(), label='NEMO lon[0]')

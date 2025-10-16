@@ -6,7 +6,7 @@ from parcels import Field, FieldSet, ParticleSet, Variable, JITParticle, Advecti
 from parcels.tools.statuscodes import StatusCode
 from datetime import timedelta
 
-version = '004'
+version = '003'
 year    = '2019'
 
 def make_curvilinear_periodic(longitude, latitude, u, v):
@@ -98,8 +98,8 @@ start_time_index   = 151
 start_time_seconds = time_seconds[start_time_index]
 
 # define drop locations
-drop_lon                 = np.arange(-4000000, 4000000, 10000)
-drop_lat                 = np.arange(-4000000, 4000000, 10000)
+drop_lon                 = np.arange(-3500000, 4000000, 300000)
+drop_lat                 = np.arange(-3500000, 4000000, 200000)
 drop_lon_2D, drop_lat_2D = np.meshgrid(drop_lon, drop_lat)
 drop_lon_1D              = drop_lon_2D.ravel()
 drop_lat_1D              = drop_lat_2D.ravel()
@@ -135,10 +135,10 @@ version = '003'
 projection = ccrs.Stereographic(central_latitude=-90,true_scale_latitude=-71,central_longitude=0)
 
 # Set up figure and axes
-fig = plt.figure(figsize=(10, 10))
+fig = plt.figure(figsize=(18, 18))
 ax = plt.axes(projection=projection)
-extent = [-4000000, 4000000, -4000000, 4000000]
-#extent = [-1500000, 1000000, -4000000, -1000000]
+#extent = [-3500000, 3500000, -3500000, 3500000]
+extent  = [-3200000,  500000,   500000, 4000000]
 ax.set_extent(extent, crs=projection)
 ax.coastlines()
 ax.gridlines(draw_labels=True)
