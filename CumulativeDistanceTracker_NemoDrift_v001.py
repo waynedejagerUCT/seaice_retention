@@ -3,7 +3,6 @@ import xarray as xr
 import numpy as np
 import numpy as np
 import pandas as pd
-import dispersion_utils as utils
 
 def compute_distance(lon1, lat1, lon2, lat2, r=6378):
     """
@@ -33,10 +32,12 @@ import numpy as np
 import xarray as xr
 
 #version control
-version = '004'
+version      = '005'
+spatial_res  = '025deg'
+temporal_res = '06hr'
 
 # fetch trajectory data
-ds1     = xr.open_zarr(f"/home/waynedj/Projects/seaiceretention/trajectories/Parcel_NEMO_2deg_06hr_v{version}.zarr", decode_timedelta=True)
+ds1     = xr.open_zarr(f"/home/waynedj/Data/intermediate/seaice_retention/trajectories/NEMO_{spatial_res}_{temporal_res}_v{version}.zarr", decode_timedelta=True)
 p_total = len(ds1.trajectory)
 t_days  = len(ds1.obs)
 
@@ -98,19 +99,19 @@ ds_output = xr.Dataset(
 )
 
 # add attrs for clarity
-ds_output["step_distance"].attrs["description"] = "Displacement between consecutive timesteps"
-ds_output["cum_distance"].attrs["description"] = "Cumulative distance travelled up to each timestep"
-ds_output["ref_displacement"].attrs["description"] = "Displacement from reference (time=0) location"
+ds_output["step_distance"].attrs["description"]          = "Displacement between consecutive timesteps"
+ds_output["cum_distance"].attrs["description"]           = "Cumulative distance travelled up to each timestep"
+ds_output["ref_displacement"].attrs["description"]       = "Displacement from reference (time=0) location"
 ds_output["meandering_coefficient"].attrs["description"] = "Meandering coefficient (M(t) = cum_distance / ref_displacement)"
-ds_output["step_distance"].attrs["units"] = "km"
-ds_output["cum_distance"].attrs["units"] = "km"
-ds_output["ref_displacement"].attrs["units"] = "km"
-ds_output["meandering_coefficient"].attrs["units"] = "dimensionless"
-ds_output["longitude"].attrs["units"] = "degrees_east"
-ds_output["latitude"].attrs["units"] = "degrees_north"
+ds_output["step_distance"].attrs["units"]                = "km"
+ds_output["cum_distance"].attrs["units"]                 = "km"
+ds_output["ref_displacement"].attrs["units"]             = "km"
+ds_output["meandering_coefficient"].attrs["units"]       = "dimensionless"
+ds_output["longitude"].attrs["units"]                    = "degrees_east"
+ds_output["latitude"].attrs["units"]                     = "degrees_north"
 
 # Save the dataset
-ds_output.to_netcdf(f"/home/waynedj/Projects/seaiceretention/trajectories/distances/distance_data_Parcel_NEMO_2deg_06hr_v{version}.nc")
+ds_output.to_netcdf(f"/home/waynedj/Data/intermediate/seaice_retention/trajectories/distances/NEMO_{spatial_res}_{temporal_res}_v{version}.nc")
 
 
 # %%
